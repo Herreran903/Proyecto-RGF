@@ -10,7 +10,6 @@ import scala.util.Random
 
 package object RiegoFinca
 {
-
   /** ****************************************************************************
    * Tipos de datos entregadas por el profesor
    * **************************************************************************** */
@@ -70,52 +69,57 @@ package object RiegoFinca
 
   /** ****************************************************************************
    * FUNCIÓN: tIR
-   * DESCRIPCIÓN:
+   * DESCRIPCIÓN: Retorna un vector de enteros con el tiempo de inicio de riego por tablon.
    * PARÁMETROS DE ENTRADA
-   * f:
-   * pi:
+   * f: Finca.
+   * pi: Programacion de riego.
    * RETORNO
-   * Matriz:
+   * TiempoInicioRiego: Vector con los tiempos de inicio de riego.
    * **************************************************************************** */
-    /*
     def tIR(f:Finca, pi:ProgRiego): TiempoInicioRiego =
     {
+      val tiemposRiego = pi.map(x => treg(f,x))
 
+      tiemposRiego.init.scanLeft(0)(_ + _)
     }
-    */
 
   /** ****************************************************************************
    * FUNCIÓN: costoRiegoTablon
-   * DESCRIPCIÓN:
+   * DESCRIPCIÓN: Retorna un el costo de riego por tablon.
    * PARÁMETROS DE ENTRADA
-   * i:
-   * f:
-   * pi:
+   * i: Numero de tablon.
+   * f: Finca.
+   * pi: Programacion de riego.
    * RETORNO
-   * Matriz:
+   * Int: Costo de riego.
    * **************************************************************************** */
-    /*
     def costoRiegoTablon(i: Int, f: Finca, pi: ProgRiego): Int =
     {
+      val tiemposIniciales = tIR(f, pi)
 
+      if((tsup(f,i) - treg(f,i)) >= tiemposIniciales(i))
+      {
+        tsup(f,i) - (tiemposIniciales(i) + treg(f,i))
+      }
+      else
+      {
+        prio(f,i) * ((tiemposIniciales(i) + treg(f,i)) - tsup(f,i))
+      }
     }
-    */
 
   /** ****************************************************************************
    * FUNCIÓN: costoRiegoFinca
-   * DESCRIPCIÓN:
+   * DESCRIPCIÓN: Retorna un el costo de riego por toda la finca.
    * PARÁMETROS DE ENTRADA
-   * f:
-   * pi:
+   * f: Finca.
+   * pi: Programacion de riego.
    * RETORNO
-   * Matriz:
+   * Int: Costo de riego.
    * **************************************************************************** */
-    /*
     def costoRiegoFinca(f: Finca, pi: ProgRiego): Int =
     {
-
+      pi.map(x => costoRiegoTablon(x, f, pi)).sum
     }
-    */
 
   /** ****************************************************************************
    * FUNCIÓN: costoRiegoFincaPar
@@ -124,7 +128,7 @@ package object RiegoFinca
    * f:
    * pi:
    * RETORNO
-   * Matriz:
+   * Int:
    * **************************************************************************** */
     /*
     def costoRiegoFincaPar(f: Finca, pi: ProgRiego): Int =
@@ -135,56 +139,57 @@ package object RiegoFinca
 
   /** ****************************************************************************
    * FUNCIÓN: costoMovilidad
-   * DESCRIPCIÓN:
+   * DESCRIPCIÓN: Retorna el costo de movilidad por toda la finca.
    * PARÁMETROS DE ENTRADA
-   * f:
-   * pi:
-   * d:
+   * f: Finca.
+   * pi: Programacion de riego.
+   * d: Distancia entre tablones.
    * RETORNO
-   * Matriz:
+   * Int: Costo de movilidad.
    * **************************************************************************** */
-    /*
     def costoMovilidad(f: Finca, pi: ProgRiego, d: Distancia): Int =
     {
-
+      (for(i <- 0 to pi.length-2) yield (d(pi(i))(pi(i+1)))).sum
     }
-    */
 
   /** ****************************************************************************
-   * FUNCIÓN: costoMovilidad
+   * FUNCIÓN: costoMovilidadPar
    * DESCRIPCIÓN:
    * PARÁMETROS DE ENTRADA
    * f:
    * pi:
    * d:
    * RETORNO
-   * Matriz:
+   * Int:
    * **************************************************************************** */
     /*
     def costoMovilidadPar(f: Finca, pi: ProgRiego, d: Distancia): Int =
     {
-      val parejasTablones = for {
-        i <- (0 to pi.length - 2).par
-      } yield (pi(i), pi(i + 1))
-      val distanciaPorPareja = parejasTablones.map { case (x, y) => d(x)(y) }
-      distanciaPorPareja.sum
+
     }
     */
 
   /** ****************************************************************************
    * FUNCIÓN: generarProgramacionesRiego
-   * DESCRIPCIÓN:
+   * DESCRIPCIÓN: Retorna toda las posibles programaciones de riego para la finca.
    * PARÁMETROS DE ENTRADA
-   * f:
+   * f: Finca
    * RETORNO
-   * Matriz:
+   * Vector[ProgRiego]: Vector de programaciones de riego.
    * **************************************************************************** */
-    /*
     def generarProgramacionesRiego(f: Finca): Vector[ProgRiego] =
     {
-
+      def posiblesCombinaciones(indices: Vector[Int], combinaciones: Vector[Int]): Vector[Vector[Int]] =
+      {
+        indices match
+        {
+          case Vector() => Vector(combinaciones)
+          case _ => for (indice <- indices; rest <- posiblesCombinaciones(indices.filterNot(_ == indice), combinaciones :+ indice)) yield rest
+        }
+      }
+      val indices = (0 to f.length-1).map(x => x).toVector
+      posiblesCombinaciones(indices, Vector())
     }
-    */
 
   /** ****************************************************************************
    * FUNCIÓN: generarProgramacionesRiegoPar
@@ -192,7 +197,7 @@ package object RiegoFinca
    * PARÁMETROS DE ENTRADA
    * f:
    * RETORNO
-   * Matriz:
+   * Vector[ProgRiego]:
    * **************************************************************************** */
     /*
     def generarProgramacionesRiegoPar(f: Finca): Vector[ProgRiego] =
@@ -208,7 +213,7 @@ package object RiegoFinca
    * f:
    * d:
    * RETORNO
-   * Matriz:
+   * (ProgRiego, Int):
    * **************************************************************************** */
     /*
     def programacionRiegoOptimo(f: Finca, d: Distancia): (ProgRiego, Int) =
@@ -224,7 +229,7 @@ package object RiegoFinca
    * f:
    * d:
    * RETORNO
-   * Matriz:
+   * (ProgRiego, Int):
    * **************************************************************************** */
     /*
     def programacionRiegoOptimoPar(f: Finca, d: Distancia): (ProgRiego, Int) =
