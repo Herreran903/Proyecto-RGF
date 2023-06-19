@@ -78,9 +78,10 @@ package object RiegoFinca
    * **************************************************************************** */
     def tIR(f:Finca, pi:ProgRiego): TiempoInicioRiego =
     {
-      val tiemposRiego = pi.map(x => treg(f,x))
+      val ti = pi.init.scanLeft(0)(_ + treg(f, _))
+      val mi = pi.zipWithIndex.map{case (valor, indice) => valor -> indice}.toMap
 
-      tiemposRiego.init.scanLeft(0)(_ + _)
+      Vector.tabulate(f.length)(x => ti(mi(x)))
     }
 
   /** ****************************************************************************
