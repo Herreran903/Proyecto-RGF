@@ -131,12 +131,24 @@ package object RiegoFinca
    * RETORNO
    * Int:
    * **************************************************************************** */
-    /*
-    def costoRiegoFincaPar(f: Finca, pi: ProgRiego): Int =
-    {
-
+  /*def costoRiegoFinca(f: Finca, pi: ProgRiego): Int = {
+    def costoRiegoFincaRec(pi: ProgRiego): Int = {
+      if (pi.length <= 1) {
+        pi.headOption.map(x => costoRiegoTablon(x, f, pi)).getOrElse(0)
+      } else {
+        val (left, right) = pi.splitAt(pi.length / 2)
+        val taskLeft = task {
+          costoRiegoFincaRec(left)
+        }
+        val taskRight = task {
+          costoRiegoFincaRec(right)
+        }
+        taskLeft.join() + taskRight.join()
+      }
     }
-    */
+
+    costoRiegoFincaRec(pi)
+  }*/
 
   /** ****************************************************************************
    * FUNCIÓN: costoMovilidad
@@ -188,7 +200,7 @@ package object RiegoFinca
           case _ => for (indice <- indices; rest <- posiblesCombinaciones(indices.filterNot(_ == indice), combinaciones :+ indice)) yield rest
         }
       }
-      val indices = (0 to f.length-1).map(x => x).toVector
+      val indices = Vector.tabulate(f.length)(x => x)
       posiblesCombinaciones(indices, Vector())
     }
 
@@ -209,19 +221,18 @@ package object RiegoFinca
 
   /** ****************************************************************************
    * FUNCIÓN: programacionRiegoOptimo
-   * DESCRIPCIÓN:
+   * DESCRIPCIÓN: Retorna la tupla con la programacion de riego mas optima y su costo total.
    * PARÁMETROS DE ENTRADA
-   * f:
-   * d:
+   * f: Finca.
+   * d: Distancia entre tablones.
    * RETORNO
-   * (ProgRiego, Int):
+   * (ProgRiego, Int): Tupla de una programacion de riego y su costo.
    * **************************************************************************** */
-    /*
     def programacionRiegoOptimo(f: Finca, d: Distancia): (ProgRiego, Int) =
     {
-
+      val p = generarProgramacionesRiego(f)
+      p.map(x => (x,costoMovilidad(f,x,d) + costoRiegoFinca(f,x))).minBy(_._2)
     }
-    */
 
   /** ****************************************************************************
    * FUNCIÓN: programacionRiegoOptimoPar
