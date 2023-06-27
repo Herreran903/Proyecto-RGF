@@ -7,6 +7,8 @@
 
 import scala.collection.parallel.CollectionConverters._
 import scala.util.Random
+import common._
+
 
 package object RiegoFinca
 {
@@ -175,12 +177,25 @@ package object RiegoFinca
    * RETORNO
    * Int:
    * **************************************************************************** */
-    /*
-    def costoMovilidadPar(f: Finca, pi: ProgRiego, d: Distancia): Int =
-    {
 
+    def costoMovilidadPar(f: Finca, pi: ProgRiego, d: Distancia): Int = {
+      val n = pi.length - 1
+      val m = (n / 2).toInt
+
+      val primeraMitad = (for (i <- 0 until m) yield d(pi(i))(pi(i + 1))).sum
+      val segundaMitad = (for (i <- m until n) yield d(pi(i))(pi(i + 1))).sum
+
+
+      parallel(primeraMitad,segundaMitad)
+      primeraMitad + segundaMitad
     }
-    */
+
+    def costoMovilidadPar2(f: Finca, pi: ProgRiego, d: Distancia): Int = {
+
+      val total = (for (i <- 0 to pi.length-2) yield d(pi(i))(pi(i + 1)))
+      total.par.sum
+    }
+
 
   /** ****************************************************************************
    * FUNCIÓN: generarProgramacionesRiego
@@ -243,10 +258,13 @@ package object RiegoFinca
    * RETORNO
    * (ProgRiego, Int):
    * **************************************************************************** */
-    /*
+
     def programacionRiegoOptimoPar(f: Finca, d: Distancia): (ProgRiego, Int) =
     {
-
+      val p = generarProgramacionesRiego(f)
+      p.par.map(x => (x, costoMovilidad(f, x, d) + costoRiegoFinca(f, x))).minBy(_._2)
     }
-    */
+
+
+
 }

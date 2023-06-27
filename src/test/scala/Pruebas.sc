@@ -8,6 +8,8 @@ val standardConfig = config (
   Key.verbose := false
 ) withWarmer (Warmer.Default())
 
+
+
 val finca = Vector((10,3,4), (5,3,3), (2,2,1), (8,1,1), (6,4,2))
 val programacion = Vector(0,1,4,2,3)
 val programacion1 = Vector(2,1,4,3,0)
@@ -17,10 +19,19 @@ val finca2 = Vector((9,3,4), (5,3,3), (2,2,1), (8,1,1), (6,4,2))
 val programacion2 = Vector(2,1,4,3,0)
 val programacion3 = Vector(2,1,4,0,3)
 
+
+val finca3 = fincaAlAzar(10)
+val programacion4 = (0 to 9).toVector;
+val distancia3 = distanciaAlAzar(10)
+
 tIR(finca, programacion)
 tIR(finca, programacion1)
 tIR(finca2, programacion2)
 tIR(finca2, programacion3)
+
+val tiempoSeq = standardConfig measure {
+  tIR(finca, programacion)
+}
 
 costoRiegoFinca(finca, programacion)
 
@@ -28,7 +39,33 @@ costoRiegoFinca(finca, programacion1)
 
 costoMovilidad(finca, programacion, distancia)
 
-costoMovilidad(finca, programacion1, distancia)
+val tiempoNormal= standardConfig measure {
+  costoMovilidad(finca, programacion1, distancia)
+}
+
+val tiempoParallel = standardConfig measure {
+  costoMovilidadPar(finca2, programacion1, distancia)
+}
+
+val tiempoPar = standardConfig measure {
+  costoMovilidadPar2(finca2, programacion1, distancia)
+}
+
+/* Prueba con datos largos */
+
+val tiempoNormal= standardConfig measure {
+  costoMovilidad(finca3, programacion4, distancia3)
+}
+
+val tiempoParallel = standardConfig measure {
+  costoMovilidadPar(finca3, programacion4, distancia3)
+}
+
+val tiempoPar = standardConfig measure {
+  costoMovilidadPar2(finca3, programacion4, distancia3)
+}
+
+/*          *        */
 
 costoRiegoFinca(finca2, programacion2)
 
