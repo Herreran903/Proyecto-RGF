@@ -2,7 +2,6 @@
  * Integrantes:
  * Nicolas Herrera Marulanda
  * Julian Alexander Alvarez Payares
- * Luis Felipe Belalcazar Alvarez
  * **************************************************************************** */
 
 import scala.collection.parallel.CollectionConverters._
