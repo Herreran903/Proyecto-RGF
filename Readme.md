@@ -1,4 +1,4 @@
-Documento readme
+Proyecto-RGF
 =============
 ## Autores:
 - Nicolas Herrera Marulanda
